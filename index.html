@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gym Tracker Lite</title>
+  <style>
+    :root {
+      --bg-primary: #101318;
+      --bg-secondary: #181d26;
+      --bg-tertiary: #0f131a;
+      --bg-button: #2a3140;
+      --text-primary: #f4f4f5;
+      --text-secondary: #b8bdc7;
+      --text-tertiary: #cfd4dd;
+      --border-color: #3c4658;
+      --border-radius-sm: 12px;
+      --border-radius-md: 14px;
+      --border-radius-lg: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      padding: 14px;
+    }
+
+    h1, h2, h3 { margin: 0; }
+    h1 { font-size: 1.8rem; }
+    p { color: var(--text-secondary); }
+
+    .top {
+      background: var(--bg-secondary);
+      padding: 18px;
+      border-radius: var(--border-radius-lg);
+      margin-bottom: 14px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.3);
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    @media (min-width: 768px) {
+      .tabs {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    button {
+      border: 0;
+      border-radius: var(--border-radius-md);
+      padding: 13px;
+      font-weight: 700;
+      background: var(--bg-button);
+      color: var(--text-primary);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button.active {
+      background: var(--text-primary);
+      color: var(--bg-primary);
+    }
+
+    button:focus-visible {
+      outline: 2px solid var(--text-primary);
+      outline-offset: 2px;
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      padding: 14px;
+      border-radius: var(--border-radius-lg);
+      margin-bottom: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    }
+
+    .target {
+      display: inline-block;
+      background: var(--bg-button);
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: var(--text-tertiary);
+      font-size: 0.85rem;
+      margin-top: 6px;
+    }
+
+    label {
+      display: block;
+      color: var(--text-tertiary);
+      font-size: 0.85rem;
+      margin: 10px 0 4px;
+      font-weight: 500;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-radius: var(--border-radius-sm);
+      padding: 12px;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--text-primary);
+    }
+
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    @media (min-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .suggestion {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      padding: 12px;
+      margin-top: 8px;
+      color: #e5e7eb;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .suggestion:hover {
+      border-color: var(--text-primary);
+      background: var(--bg-button);
+    }
+
+    .walk-row {
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      padding: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .walk-row-text {
+      flex: 1;
+    }
+
+    .walk-row-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-small {
+      padding: 8px 12px;
+      font-size: 0.85rem;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    .section {
+      margin-top: 20px;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="top">
+      <h1>💪 Gym Tracker Lite</h1>
+      <p>Track your workout sessions and achieve your fitness goals</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="log">Log Workout</button>
+      <button class="tab-btn" data-tab="history">History</button>
+      <button class="tab-btn" data-tab="stats">Statistics</button>
+      <button class="tab-btn" data-tab="settings">Settings</button>
+    </div>
+
+    <!-- Log Workout Tab -->
+    <section id="log-tab" class="tab-content" style="display: block;">
+      <div class="card">
+        <h2>Log New Workout</h2>
+
+        <label for="exercise-name">Exercise Name</label>
+        <input type="text" id="exercise-name" placeholder="e.g., Bench Press" aria-label="Exercise name" />
+
+        <label for="sets">Sets</label>
+        <input type="number" id="sets" placeholder="3" aria-label="Number of sets" />
+
+        <label for="reps">Reps</label>
+        <input type="number" id="reps" placeholder="10" aria-label="Number of reps" />
+
+        <label for="weight">Weight (lbs)</label>
+        <input type="number" id="weight" placeholder="185" aria-label="Weight in pounds" />
+
+        <label for="notes">Notes</label>
+        <textarea id="notes" placeholder="How did the workout feel? Any observations?" aria-label="Workout notes"></textarea>
+
+        <label>Suggested Exercises:</label>
+        <div class="suggestion" role="button" tabindex="0">🏋️ Bench Press</div>
+        <div class="suggestion" role="button" tabindex="0">🤸 Squats</div>
+        <div class="suggestion" role="button" tabindex="0">🏃 Running</div>
+        <div class="suggestion" role="button" tabindex="0">💪 Deadlifts</div>
+
+        <button style="margin-top: 16px; width: 100%;">Log Workout</button>
+      </div>
+    </section>
+
+    <!-- History Tab -->
+    <section id="history-tab" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2>Workout History</h2>
+        <p>Your recent workouts</p>
+
+        <div class="walk-row">
+          <div class="walk-row-text">
+            <strong>Bench Press</strong>
+            <p style="margin: 4px 0 0 0; font-size: 0.9rem;">3 sets × 10 reps @ 185 lbs</p>
+            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">Today at 2:30 PM</p>
+          </div>
+          <div class="walk-row-actions">
+            <button class="btn-small">Edit</button>
+            <button class="btn-small btn-danger">Delete</button>
+          </div>
+        </div>
+
+        <div class="walk-row">
+          <div class="walk-row-text">
+            <strong>Squats</strong>
+            <p style="margin: 4px 0 0 0; font-size: 0.9rem;">4 sets × 8 reps @ 225 lbs</p>
+            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">Yesterday at 4:15 PM</p>
+          </div>
+          <div class="walk-row-actions">
+            <button class="btn-small">Edit</button>
+            <button class="btn-small btn-danger">Delete</button>
+          </div>
+        </div>
+
+        <div class="walk-row">
+          <div class="walk-row-text">
+            <strong>Deadlifts</strong>
+            <p style="margin: 4px 0 0 0; font-size: 0.9rem;">3 sets × 5 reps @ 315 lbs</p>
+            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">2 days ago at 6:00 PM</p>
+          </div>
+          <div class="walk-row-actions">
+            <button class="btn-small">Edit</button>
+            <button class="btn-small btn-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics Tab -->
+    <section id="stats-tab" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2>Your Statistics</h2>
+
+        <div class="grid">
+          <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--border-radius-sm); text-align: center;">
+            <p style="margin: 0 0 8px 0; color: var(--text-secondary); font-size: 0.9rem;">Total Workouts</p>
+            <h3 style="font-size: 2rem;">12</h3>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--border-radius-sm); text-align: center;">
+            <p style="margin: 0 0 8px 0; color: var(--text-secondary); font-size: 0.9rem;">This Week</p>
+            <h3 style="font-size: 2rem;">3</h3>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--border-radius-sm); text-align: center;">
+            <p style="margin: 0 0 8px 0; color: var(--text-secondary); font-size: 0.9rem;">Favorite Exercise</p>
+            <h3 style="font-size: 1.3rem;">Bench Press</h3>
+          </div>
+          <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--border-radius-sm); text-align: center;">
+            <p style="margin: 0 0 8px 0; color: var(--text-secondary); font-size: 0.9rem;">Current Streak</p>
+            <h3 style="font-size: 2rem;">5 days</h3>
+          </div>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <h3>Progress by Exercise</h3>
+          <div class="walk-row">
+            <div class="walk-row-text">
+              <strong>Bench Press</strong>
+              <p style="margin: 4px 0 0 0; font-size: 0.9rem;">Personal Best: 225 lbs</p>
+            </div>
+          </div>
+          <div class="walk-row">
+            <div class="walk-row-text">
+              <strong>Squats</strong>
+              <p style="margin: 4px 0 0 0; font-size: 0.9rem;">Personal Best: 315 lbs</p>
+            </div>
+          </div>
+          <div class="walk-row">
+            <div class="walk-row-text">
+              <strong>Deadlifts</strong>
+              <p style="margin: 4px 0 0 0; font-size: 0.9rem;">Personal Best: 405 lbs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings Tab -->
+    <section id="settings-tab" class="tab-content" style="display: none;">
+      <div class="card">
+        <h2>Settings</h2>
+
+        <label for="weight-unit">Weight Unit</label>
+        <select id="weight-unit" aria-label="Select weight unit">
+          <option selected>Pounds (lbs)</option>
+          <option>Kilograms (kg)</option>
+        </select>
+
+        <label for="rest-time">Default Rest Time Between Sets (seconds)</label>
+        <input type="number" id="rest-time" placeholder="60" aria-label="Rest time in seconds" />
+
+        <label for="notification">Enable Notifications</label>
+        <input type="checkbox" id="notification" style="width: auto;" aria-label="Enable workout notifications" />
+
+        <label for="theme">Theme</label>
+        <select id="theme" aria-label="Select theme">
+          <option selected>Dark Mode</option>
+          <option>Light Mode</option>
+          <option>Auto</option>
+        </select>
+
+        <button style="margin-top: 16px; width: 100%;">Save Settings</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Tab switching functionality
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons and hide all tabs
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabContents.forEach(tab => tab.style.display = 'none');
+
+        // Add active class to clicked button and show corresponding tab
+        button.classList.add('active');
+        const tabId = button.getAttribute('data-tab') + '-tab';
+        document.getElementById(tabId).style.display = 'block';
+      });
+    });
+
+    // Suggestion click handlers
+    const suggestions = document.querySelectorAll('.suggestion');
+    suggestions.forEach(suggestion => {
+      suggestion.addEventListener('click', () => {
+        const exerciseName = document.getElementById('exercise-name');
+        exerciseName.value = suggestion.textContent.replace('🏋️ ', '').replace('🤸 ', '').replace('🏃 ', '').replace('💪 ', '');
+      });
+    });
+
+    // Keyboard accessibility for suggestions
+    suggestions.forEach(suggestion => {
+      suggestion.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          suggestion.click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
