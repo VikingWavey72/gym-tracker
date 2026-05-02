@@ -3,404 +3,278 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101318" />
+  <link rel="manifest" href="manifest.json" />
   <title>Gym Tracker Lite</title>
   <style>
-    :root {
-      --bg-primary: #101318;
-      --bg-secondary: #181d26;
-      --bg-tertiary: #0f131a;
-      --bg-button: #2a3140;
-      --text-primary: #f4f4f5;
-      --text-secondary: #b8bdc7;
-      --text-tertiary: #cfd4dd;
-      --border-color: #3c4658;
-      --border-radius-sm: 12px;
-      --border-radius-md: 14px;
-      --border-radius-lg: 18px;
-    }
-
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
+      background: #101318;
+      color: #f4f4f5;
       padding: 14px;
+      padding-bottom: 40px;
     }
-
     h1, h2, h3 { margin: 0; }
     h1 { font-size: 1.8rem; }
-    p { color: var(--text-secondary); }
-
+    p { color: #b8bdc7; }
     .top {
-      background: var(--bg-secondary);
+      background: #181d26;
       padding: 18px;
-      border-radius: var(--border-radius-lg);
+      border-radius: 18px;
       margin-bottom: 14px;
       box-shadow: 0 8px 22px rgba(0,0,0,0.3);
     }
-
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    @media (min-width: 768px) {
-      .tabs {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-
+    .tabs { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 14px; }
     button {
       border: 0;
-      border-radius: var(--border-radius-md);
+      border-radius: 14px;
       padding: 13px;
       font-weight: 700;
-      background: var(--bg-button);
-      color: var(--text-primary);
+      background: #2a3140;
+      color: #fff;
       font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
     }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    button.active {
-      background: var(--text-primary);
-      color: var(--bg-primary);
-    }
-
-    button:focus-visible {
-      outline: 2px solid var(--text-primary);
-      outline-offset: 2px;
-    }
-
+    button.active { background: #f4f4f5; color: #101318; }
     .card {
-      background: var(--bg-secondary);
+      background: #181d26;
       padding: 14px;
-      border-radius: var(--border-radius-lg);
+      border-radius: 18px;
       margin-bottom: 12px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.25);
     }
-
     .target {
       display: inline-block;
-      background: var(--bg-button);
+      background: #2a3140;
       padding: 5px 9px;
       border-radius: 999px;
-      color: var(--text-tertiary);
+      color: #cfd4dd;
       font-size: 0.85rem;
       margin-top: 6px;
     }
-
-    label {
-      display: block;
-      color: var(--text-tertiary);
-      font-size: 0.85rem;
-      margin: 10px 0 4px;
-      font-weight: 500;
-    }
-
+    label { display: block; color: #cfd4dd; font-size: 0.85rem; margin: 10px 0 4px; }
     input, select, textarea {
       width: 100%;
-      border: 1px solid var(--border-color);
-      background: var(--bg-tertiary);
-      color: var(--text-primary);
-      border-radius: var(--border-radius-sm);
+      border: 1px solid #3c4658;
+      background: #0f131a;
+      color: #fff;
+      border-radius: 12px;
       padding: 12px;
       font-size: 1rem;
-      transition: border-color 0.2s ease;
     }
-
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--text-primary);
-    }
-
-    textarea {
-      min-height: 70px;
-      resize: vertical;
-      font-family: inherit;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    @media (min-width: 768px) {
-      .grid {
-        grid-template-columns: repeat(4, 1fr);
-      }
-    }
-
+    textarea { min-height: 70px; resize: vertical; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .suggestion {
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius-sm);
+      background: #0f131a;
+      border: 1px solid #3c4658;
+      border-radius: 12px;
       padding: 12px;
       margin-top: 8px;
       color: #e5e7eb;
       font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
     }
-
-    .suggestion:hover {
-      border-color: var(--text-primary);
-      background: var(--bg-button);
-    }
-
     .walk-row {
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius-sm);
-      padding: 12px;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: #0f131a;
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 8px;
+      color: #d6d9df;
     }
-
-    .walk-row-text {
-      flex: 1;
-    }
-
-    .walk-row-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .btn-small {
-      padding: 8px 12px;
-      font-size: 0.85rem;
-    }
-
-    .btn-danger {
-      background: #dc2626;
-    }
-
-    .btn-danger:hover {
-      background: #b91c1c;
-    }
-
-    .section {
-      margin-top: 20px;
-    }
-
-    .section-title {
-      font-size: 1.3rem;
-      margin-bottom: 12px;
-      font-weight: 700;
-    }
+    .danger { background: #5d1f2a; }
+    .small { font-size: 0.9rem; color: #b8bdc7; }
+    .footer { margin-top: 18px; color: #9aa2b1; font-size: 0.85rem; text-align: center; }
   </style>
 </head>
 <body>
-  <main>
-    <div class="top">
-      <h1>💪 Gym Tracker Lite</h1>
-      <p>Track your workout sessions and achieve your fitness goals</p>
-    </div>
+  <div class="top">
+    <h1>Gym Tracker</h1>
+    <p>3 days strength, walks on off-days, and no heroic spine-wizard nonsense.</p>
+    <p class="small"><strong>Rule:</strong> Easy = add weight. Solid = repeat/build. Grindy = hold. Back unhappy = reduce.</p>
+  </div>
 
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="log">Log Workout</button>
-      <button class="tab-btn" data-tab="history">History</button>
-      <button class="tab-btn" data-tab="stats">Statistics</button>
-      <button class="tab-btn" data-tab="settings">Settings</button>
-    </div>
+  <div class="tabs" id="tabs"></div>
+  <div id="workout"></div>
 
-    <!-- Log Workout Tab -->
-    <section id="log-tab" class="tab-content" style="display: block;">
-      <div class="card">
-        <h2>Log New Workout</h2>
+  <div class="card">
+    <h2>Off-Day Walk</h2>
+    <label>Minutes</label>
+    <input id="walkMinutes" type="number" value="30" />
+    <label>Notes</label>
+    <textarea id="walkNotes" placeholder="Pace, back, hills, weather..."></textarea>
+    <button onclick="logWalk()" style="margin-top:10px;width:100%;">Log Walk</button>
+    <div id="walkLog"></div>
+  </div>
 
-        <label for="exercise-name">Exercise Name</label>
-        <input type="text" id="exercise-name" placeholder="e.g., Bench Press" aria-label="Exercise name" />
+  <div class="card">
+    <h2>Data</h2>
+    <p class="small">Saved on this device. Use export before changing phones or clearing browser data.</p>
+    <button onclick="exportData()" style="width:100%;margin-bottom:8px;">Export / Copy Data</button>
+    <button class="danger" onclick="clearAll()" style="width:100%;">Clear Everything</button>
+    <textarea id="exportBox" placeholder="Exported data appears here..." style="margin-top:10px;"></textarea>
+  </div>
 
-        <label for="sets">Sets</label>
-        <input type="number" id="sets" placeholder="3" aria-label="Number of sets" />
+  <div class="footer">Built for steady graft, not goblin-mode disaster.</div>
 
-        <label for="reps">Reps</label>
-        <input type="number" id="reps" placeholder="10" aria-label="Number of reps" />
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js"));
+}
 
-        <label for="weight">Weight (lbs)</label>
-        <input type="number" id="weight" placeholder="185" aria-label="Weight in pounds" />
+const routine = {
+  "Day 1 – Push": [
+    ["Hammer Strength Chest Press", "4 × 5", "strength"],
+    ["Incline Dumbbell Press", "3 × 6", "strength"],
+    ["Seated Shoulder Press", "3 × 5", "strength"],
+    ["Leg Press", "4 × 6", "strength"],
+    ["Cable Triceps Pushdown", "3 × 8", "accessory"],
+    ["Core – Plank / Dead Bugs", "3 sets", "core"]
+  ],
+  "Day 2 – Pull": [
+    ["Seated Row", "4 × 5", "strength"],
+    ["Lat Pulldown", "3 × 6", "strength"],
+    ["Romanian Deadlift", "3 × 6", "strength"],
+    ["Hamstring Curl", "3 × 8", "accessory"],
+    ["Dumbbell Bicep Curl", "3 × 8", "accessory"],
+    ["Face Pulls", "3 × 10", "accessory"]
+  ],
+  "Day 3 – Legs + Power": [
+    ["Leg Press", "5 × 5", "strength"],
+    ["Goblet Squat / Smith Squat", "3 × 6", "strength"],
+    ["Calf Raises", "3 × 10", "accessory"],
+    ["Chest Press – lighter", "3 × 6", "strength"],
+    ["Row Variation", "3 × 6", "strength"],
+    ["Core Work", "3 sets", "core"]
+  ]
+};
 
-        <label for="notes">Notes</label>
-        <textarea id="notes" placeholder="How did the workout feel? Any observations?" aria-label="Workout notes"></textarea>
+let selectedDay = localStorage.getItem("selectedDay") || Object.keys(routine)[0];
+let data = JSON.parse(localStorage.getItem("gymTrackerLite") || "{}");
+let walks = JSON.parse(localStorage.getItem("walkLogLite") || "[]");
 
-        <label>Suggested Exercises:</label>
-        <div class="suggestion" role="button" tabindex="0">🏋️ Bench Press</div>
-        <div class="suggestion" role="button" tabindex="0">🤸 Squats</div>
-        <div class="suggestion" role="button" tabindex="0">🏃 Running</div>
-        <div class="suggestion" role="button" tabindex="0">💪 Deadlifts</div>
+function save() {
+  localStorage.setItem("gymTrackerLite", JSON.stringify(data));
+  localStorage.setItem("walkLogLite", JSON.stringify(walks));
+  localStorage.setItem("selectedDay", selectedDay);
+}
 
-        <button style="margin-top: 16px; width: 100%;">Log Workout</button>
-      </div>
-    </section>
+function suggestion(feel) {
+  if (feel === "Easy") return "Next time: add a little weight.";
+  if (feel === "Solid") return "Next time: repeat once or add one rep.";
+  if (feel === "Grindy") return "Next time: hold the weight.";
+  if (feel === "Back unhappy") return "Next time: drop 10–15% and protect form.";
+  return "Log how it felt.";
+}
 
-    <!-- History Tab -->
-    <section id="history-tab" class="tab-content" style="display: none;">
-      <div class="card">
-        <h2>Workout History</h2>
-        <p>Your recent workouts</p>
+function safeText(value) {
+  return String(value || "").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
 
-        <div class="walk-row">
-          <div class="walk-row-text">
-            <strong>Bench Press</strong>
-            <p style="margin: 4px 0 0 0; font-size: 0.9rem;">3 sets × 10 reps @ 185 lbs</p>
-            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">Today at 2:30 PM</p>
-          </div>
-          <div class="walk-row-actions">
-            <button class="btn-small">Edit</button>
-            <button class="btn-small btn-danger">Delete</button>
-          </div>
+function renderTabs() {
+  const tabs = document.getElementById("tabs");
+  tabs.innerHTML = "";
+  Object.keys(routine).forEach(day => {
+    const btn = document.createElement("button");
+    btn.textContent = day;
+    btn.className = day === selectedDay ? "active" : "";
+    btn.onclick = () => { selectedDay = day; save(); render(); };
+    tabs.appendChild(btn);
+  });
+}
+
+function renderWorkout() {
+  const container = document.getElementById("workout");
+  container.innerHTML = "";
+  routine[selectedDay].forEach(([name, target, type]) => {
+    const key = selectedDay + "|" + name;
+    const entry = data[key] || { weight:"", reps:"", feel:"Solid", notes:"" };
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h3>${safeText(name)}</h3>
+      <span class="target">${safeText(target)} • ${safeText(type)}</span>
+      <div class="grid">
+        <div>
+          <label>Weight</label>
+          <input value="${safeText(entry.weight)}" placeholder="e.g. 80kg" oninput="updateEntry('${key}','weight',this.value)">
         </div>
-
-        <div class="walk-row">
-          <div class="walk-row-text">
-            <strong>Squats</strong>
-            <p style="margin: 4px 0 0 0; font-size: 0.9rem;">4 sets × 8 reps @ 225 lbs</p>
-            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">Yesterday at 4:15 PM</p>
-          </div>
-          <div class="walk-row-actions">
-            <button class="btn-small">Edit</button>
-            <button class="btn-small btn-danger">Delete</button>
-          </div>
-        </div>
-
-        <div class="walk-row">
-          <div class="walk-row-text">
-            <strong>Deadlifts</strong>
-            <p style="margin: 4px 0 0 0; font-size: 0.9rem;">3 sets × 5 reps @ 315 lbs</p>
-            <p style="margin: 2px 0 0 0; font-size: 0.8rem; color: var(--text-secondary);">2 days ago at 6:00 PM</p>
-          </div>
-          <div class="walk-row-actions">
-            <button class="btn-small">Edit</button>
-            <button class="btn-small btn-danger">Delete</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Statistics Tab -->
-    <section id="stats-tab" class="tab-content" style="display: none;">
-      <div class="card">
-        <h2>Your Statistics</h2>
-
-        <div class="grid">
-          <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--border-radius-sm); text-align: center;">
-            <p style="margin: 0 0 8px 0; color: var(--text-secondary); font-size: 0.9rem;">Total Workouts</p>
-            <h3 style="font-size: 2rem;">12</h3>
-          </div>
-          <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--border-radius-sm); text-align: center;">
-            <p style="margin: 0 0 8px 0; color: var(--text-secondary); font-size: 0.9rem;">This Week</p>
-            <h3 style="font-size: 2rem;">3</h3>
-          </div>
-          <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--border-radius-sm); text-align: center;">
-            <p style="margin: 0 0 8px 0; color: var(--text-secondary); font-size: 0.9rem;">Favorite Exercise</p>
-            <h3 style="font-size: 1.3rem;">Bench Press</h3>
-          </div>
-          <div style="background: var(--bg-tertiary); padding: 16px; border-radius: var(--border-radius-sm); text-align: center;">
-            <p style="margin: 0 0 8px 0; color: var(--text-secondary); font-size: 0.9rem;">Current Streak</p>
-            <h3 style="font-size: 2rem;">5 days</h3>
-          </div>
-        </div>
-
-        <div style="margin-top: 20px;">
-          <h3>Progress by Exercise</h3>
-          <div class="walk-row">
-            <div class="walk-row-text">
-              <strong>Bench Press</strong>
-              <p style="margin: 4px 0 0 0; font-size: 0.9rem;">Personal Best: 225 lbs</p>
-            </div>
-          </div>
-          <div class="walk-row">
-            <div class="walk-row-text">
-              <strong>Squats</strong>
-              <p style="margin: 4px 0 0 0; font-size: 0.9rem;">Personal Best: 315 lbs</p>
-            </div>
-          </div>
-          <div class="walk-row">
-            <div class="walk-row-text">
-              <strong>Deadlifts</strong>
-              <p style="margin: 4px 0 0 0; font-size: 0.9rem;">Personal Best: 405 lbs</p>
-            </div>
-          </div>
+        <div>
+          <label>Reps</label>
+          <input value="${safeText(entry.reps)}" placeholder="5/5/5/5" oninput="updateEntry('${key}','reps',this.value)">
         </div>
       </div>
-    </section>
+      <label>How it felt</label>
+      <select onchange="updateEntry('${key}','feel',this.value)">
+        <option ${entry.feel==='Easy'?'selected':''}>Easy</option>
+        <option ${entry.feel==='Solid'?'selected':''}>Solid</option>
+        <option ${entry.feel==='Grindy'?'selected':''}>Grindy</option>
+        <option ${entry.feel==='Back unhappy'?'selected':''}>Back unhappy</option>
+      </select>
+      <div class="suggestion">${suggestion(entry.feel)}</div>
+      <label>Notes</label>
+      <textarea placeholder="Machine setting, back, form, confidence..." oninput="updateEntry('${key}','notes',this.value)">${safeText(entry.notes)}</textarea>
+    `;
+    container.appendChild(card);
+  });
+}
 
-    <!-- Settings Tab -->
-    <section id="settings-tab" class="tab-content" style="display: none;">
-      <div class="card">
-        <h2>Settings</h2>
+function updateEntry(key, field, value) {
+  data[key] = data[key] || { weight:"", reps:"", feel:"Solid", notes:"" };
+  data[key][field] = value;
+  save();
+  if (field === "feel") renderWorkout();
+}
 
-        <label for="weight-unit">Weight Unit</label>
-        <select id="weight-unit" aria-label="Select weight unit">
-          <option selected>Pounds (lbs)</option>
-          <option>Kilograms (kg)</option>
-        </select>
+function logWalk() {
+  const minutes = document.getElementById("walkMinutes").value;
+  const notes = document.getElementById("walkNotes").value;
+  if (!minutes) return;
+  walks.unshift({ date: new Date().toLocaleDateString(), minutes, notes });
+  document.getElementById("walkNotes").value = "";
+  save();
+  renderWalks();
+}
 
-        <label for="rest-time">Default Rest Time Between Sets (seconds)</label>
-        <input type="number" id="rest-time" placeholder="60" aria-label="Rest time in seconds" />
+function renderWalks() {
+  const log = document.getElementById("walkLog");
+  log.innerHTML = "";
+  walks.forEach((walk, index) => {
+    const row = document.createElement("div");
+    row.className = "walk-row";
+    row.innerHTML = `<strong>${safeText(walk.minutes)} mins</strong> — ${safeText(walk.date)}<br><span class="small">${safeText(walk.notes || "No notes")}</span><br><button onclick="deleteWalk(${index})" style="margin-top:8px;padding:8px;">Delete</button>`;
+    log.appendChild(row);
+  });
+}
 
-        <label for="notification">Enable Notifications</label>
-        <input type="checkbox" id="notification" style="width: auto;" aria-label="Enable workout notifications" />
+function deleteWalk(index) {
+  walks.splice(index, 1);
+  save();
+  renderWalks();
+}
 
-        <label for="theme">Theme</label>
-        <select id="theme" aria-label="Select theme">
-          <option selected>Dark Mode</option>
-          <option>Light Mode</option>
-          <option>Auto</option>
-        </select>
+function exportData() {
+  const output = { workouts: data, walks: walks };
+  const box = document.getElementById("exportBox");
+  box.value = JSON.stringify(output, null, 2);
+  box.select();
+  try { document.execCommand("copy"); } catch(e) {}
+}
 
-        <button style="margin-top: 16px; width: 100%;">Save Settings</button>
-      </div>
-    </section>
-  </main>
+function clearAll() {
+  if (!confirm("Clear all saved gym and walk data?")) return;
+  data = {};
+  walks = [];
+  save();
+  render();
+}
 
-  <script>
-    // Tab switching functionality
-    const tabButtons = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
+function render() {
+  renderTabs();
+  renderWorkout();
+  renderWalks();
+}
 
-    tabButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        // Remove active class from all buttons and hide all tabs
-        tabButtons.forEach(btn => btn.classList.remove('active'));
-        tabContents.forEach(tab => tab.style.display = 'none');
-
-        // Add active class to clicked button and show corresponding tab
-        button.classList.add('active');
-        const tabId = button.getAttribute('data-tab') + '-tab';
-        document.getElementById(tabId).style.display = 'block';
-      });
-    });
-
-    // Suggestion click handlers
-    const suggestions = document.querySelectorAll('.suggestion');
-    suggestions.forEach(suggestion => {
-      suggestion.addEventListener('click', () => {
-        const exerciseName = document.getElementById('exercise-name');
-        exerciseName.value = suggestion.textContent.replace('🏋️ ', '').replace('🤸 ', '').replace('🏃 ', '').replace('💪 ', '');
-      });
-    });
-
-    // Keyboard accessibility for suggestions
-    suggestions.forEach(suggestion => {
-      suggestion.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          suggestion.click();
-        }
-      });
-    });
-  </script>
+render();
+</script>
 </body>
 </html>
